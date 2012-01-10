@@ -346,12 +346,12 @@ build_url(char *url, int defaultport, int id)
     /* How do we deal with handling the multi-headed url_t arrays */
     U->calltype = URL_POST;
     *post_cmd = 0;
-    post_cmd += 5;
+    post_cmd += sizeof(" POST");
     process_post_data(U, post_cmd);
   } else if( put_cmd != NULL ) {
     U->calltype = URL_PUT;
     *put_cmd = 0;
-    put_cmd += 4;
+    put_cmd += sizeof(" PUT");
     process_post_data(U, put_cmd);
   } else if( delete_cmd != NULL ) {
     U->calltype   = URL_DELETE;
@@ -359,7 +359,7 @@ build_url(char *url, int defaultport, int id)
     U->posttemp   = NULL;
     U->postlen    = 0;
     *delete_cmd = 0;
-    delete_cmd += 8;
+    delete_cmd += sizeof(" DELETE");
     process_post_data(U, delete_cmd);
   } else {
     U->calltype   = URL_GET;
