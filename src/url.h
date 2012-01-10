@@ -30,8 +30,11 @@
  * client data
  */
 typedef enum {
-  URL_GET   = 0,
-  URL_POST  = 1
+  URL_GET    = 0,
+  URL_POST   = 1,
+  URL_PUT    = 2,
+  URL_PATCH  = 3,
+  URL_DELETE = 4
 } DIRECTIVE;
 
 /**

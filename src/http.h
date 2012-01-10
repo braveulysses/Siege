@@ -76,6 +76,9 @@ struct headers
 /* http function prototypes */
 int      http_get (CONN *C, URL *U);
 int      http_post(CONN *C, URL *U);
+int      http_put(CONN *C, URL *U);
+int      http_patch(CONN *C, URL *U);
+int      http_delete(CONN *C, URL *U);
 void     http_free_headers(HEADERS *h);
 HEADERS *http_read_headers(CONN *C, URL *U);
 ssize_t  http_read(CONN *C);

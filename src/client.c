@@ -296,10 +296,22 @@ http_request(CONN *C, URL *U, CLIENT *client)
   }
 
   /**
-   * write to socket with a POST or GET
+   * write to socket with the appropriate HTTP method
    */
   if (U->calltype == URL_POST) { 
     if ((http_post(C, U)) < 0) {
+      C->connection.reuse = 0;
+      socket_close(C);
+      return FALSE;
+    }
+  } else if (U->calltype == URL_PUT) {
+    if ((http_put(C, U)) < 0) {
+      C->connection.reuse = 0;
+      socket_close(C);
+      return FALSE;
+    }
+  } else if (U->calltype == URL_DELETE) {
+    if ((http_delete(C, U)) < 0) {
       C->connection.reuse = 0;
       socket_close(C);
       return FALSE;

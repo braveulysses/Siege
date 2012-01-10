@@ -25,6 +25,7 @@
 #include <setup.h>
 #include <load.h>
 #include <date.h>
+#include <util.h>
 #include <joedog/joedog.h>
 #include <joedog/boolean.h>
 
@@ -325,6 +326,9 @@ build_url(char *url, int defaultport, int id)
   URL *U;                  /* defined in setup.h        */
   int mark[4] = {0,0,0,0}; /* placement counters.       */
   char *post_cmd=NULL;     /* POST directive for server */
+  char *put_cmd=NULL;
+  char *patch_cmd=NULL;
+  char *delete_cmd=NULL;
   char *tmp;
 
   U = xcalloc(sizeof(URL), 1);
@@ -334,6 +338,9 @@ build_url(char *url, int defaultport, int id)
   U->cached   = FALSE;
   
   post_cmd = strstr(url, " POST"); 
+  put_cmd = strstr(url, " PUT"); 
+  patch_cmd = strstr(url, " PATCH"); 
+  delete_cmd = strstr(url, " DELETE"); 
 
   if( post_cmd != NULL ){
     /* How do we deal with handling the multi-headed url_t arrays */
@@ -341,6 +348,19 @@ build_url(char *url, int defaultport, int id)
     *post_cmd = 0;
     post_cmd += 5;
     process_post_data(U, post_cmd);
+  } else if( put_cmd != NULL ) {
+    U->calltype = URL_PUT;
+    *put_cmd = 0;
+    put_cmd += 4;
+    process_post_data(U, put_cmd);
+  } else if( delete_cmd != NULL ) {
+    U->calltype   = URL_DELETE;
+    U->postdata   = NULL;
+    U->posttemp   = NULL;
+    U->postlen    = 0;
+    *delete_cmd = 0;
+    delete_cmd += 8;
+    process_post_data(U, delete_cmd);
   } else {
     U->calltype   = URL_GET;
     U->postdata   = NULL;
@@ -450,7 +470,7 @@ add_url(char *url, int id)
   if (!url) {
     NOTIFY(WARNING, "INVALID URL: <%s>", url);
     display_help();
-  } 
+  }
   /**
    * freed in build_url()
    */
